@@ -55,6 +55,12 @@ Create **HLSL → Custom Function** to start with `Out = In;`. Edit the code dir
 
 Code and port edits remain a saved draft until compilation succeeds. An invalid draft leaves the applied function and its connections intact. Renaming a body port keeps its ID; removing a port or changing its direction removes that port's existing connections when applied. File discovery reads declarations without evaluating preprocessor branches; ambiguous entry declarations require an unambiguous wrapper.
 
+## Agent authoring
+
+Agents can discover nodes, read only graph nodes/connections, and create or patch graphs with short JSON aliases and named ports. Positions are optional: automatic arrangement reuses WhimTex's algorithm. New branches preserve existing positions; **Arrange → All Nodes / Selected Nodes** exposes the planner in the UI. Live edits validate on a copy and apply with Undo and revision checks. See [the compact agent API](Documentation~/AgentAPI.md).
+
+Agents can also request a specific node's preview as a PNG, selecting its output, channels, Image/Height/3D mode and animation time. This works with collapsed nodes and unsaved edits without changing the graph's preview settings.
+
 ## Integration boundary
 
 WhimShader does not patch Unity package files or use reflection to access their private members. Its Editor sources compile through an assembly reference into URP.Editor, which already has Shader Graph friend access. Its small runtime LUT helpers use URP.Runtime's assembly reference so the Editor integration can reference them without altering Unity's asmdefs. This is a version-pinned internal API dependency, not a promise of compatibility with arbitrary future Unity releases.

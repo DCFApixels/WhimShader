@@ -56,6 +56,10 @@ namespace DCFApixels.WhimShader
         }
 
         [SerializeField] internal List<Entry> previews = new();
+        [Serializable]
+        internal sealed class AuthoringName { public string name, nodeId; }
+        [SerializeField] internal List<AuthoringName> authoringNames = new();
+        [SerializeField] internal List<AuthoringName> authoringParameters = new();
         public WhimShaderNodePresentationMetadata() { name = string.Empty; }
         internal override bool ExposeToSearcher => false;
         public override bool hasPreview => false;

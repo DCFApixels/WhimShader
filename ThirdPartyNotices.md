@@ -11,4 +11,4 @@ The docking workspace, node/preview controls, height renderer, visual styles, an
 
 The root MIT license covers WhimShader's original code and MIT-derived workspace code; it does not replace the licenses of Unity package dependencies or source adaptations.
 
-The CodeArea controls and HLSL declaration discovery are adapted from WhimTex under MIT. The editor bundles Microsoft's Cascadia Mono font under the SIL Open Font License 1.1; font license and notices are retained in `Editor/UI/Code/Fonts/CascadiaMono`.
+The CodeArea controls, HLSL declaration discovery and automatic node arrangement algorithm are adapted from WhimTex under MIT. The editor bundles Microsoft's Cascadia Mono font under the SIL Open Font License 1.1; font license and notices are retained in `Editor/UI/Code/Fonts/CascadiaMono`.

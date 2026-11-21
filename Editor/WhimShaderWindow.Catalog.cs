@@ -72,7 +72,7 @@ namespace DCFApixels.WhimShader
             return result;
         }
 
-        static string[] CatalogPath(NodeEntry entry)
+        internal static string[] CatalogPath(NodeEntry entry)
         {
             var path = entry.title.ToArray();
             if (entry.node is PropertyNode property) path = new[] { "Parameters", property.property.displayName };

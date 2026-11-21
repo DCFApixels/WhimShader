@@ -181,6 +181,10 @@ namespace DCFApixels.WhimShader
                 toolbar.Add(new ToolbarButton(CreateMaterial) { text = "Create Material" });
                 toolbar.Add(new ToolbarButton(FrameGraph) { text = "Frame All" });
                 toolbar.Add(new ToolbarButton(() => editor?.graphView.FrameSelection()) { text = "Frame Selection" });
+                var arrange = new ToolbarMenu { text = "Arrange" };
+                arrange.menu.AppendAction("All Nodes", _ => ArrangeNodes(true));
+                arrange.menu.AppendAction("Selected Nodes", _ => ArrangeNodes(false));
+                toolbar.Add(arrange);
                 rootVisualElement.Add(toolbar);
                 var body = new VisualElement { name = "whimshader-body" };
                 body.style.flexGrow = 1; body.style.overflow = Overflow.Hidden;
