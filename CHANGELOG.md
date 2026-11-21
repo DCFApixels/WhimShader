@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fixed stretched and blurred catalog thumbnails by preserving the atlas source dimensions and disabling texture compression and mipmaps, matching WhimTex's import settings.
+- Reused existing atlas thumbnails for additional native texture, coordinate, matrix, normal, lighting and conversion nodes in both Nodes and Create Node. Parameter entries now choose thumbnails by their value/resource type; compact icons remain unchanged.
+- Rebuilt Custom Function with a working default, an on-node WhimTex CodeArea, editable ports, resizable code, separate saved drafts and explicit compilation. Invalid drafts retain the last applied function.
+- Added HLSL file/function selection, signature-derived ports including returns and inout, and conversion to embedded full source while retaining relative include paths. Existing native functions retain their code, slot IDs, defaults and connections when opened in the new editor.
+
 ## 0.1.0 — 2026-11-22
 
 - Added a URP runtime shader editor with native Shader Graph node discovery, serialization, stage restrictions and ShaderLab generation.

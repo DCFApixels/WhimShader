@@ -1,0 +1,251 @@
+// Adapted from WhimTex's reusable ShaderCode controls. Copyright (c) 2026 Mikhail.
+// MIT; see LICENSE.WhimTex.md. Uses public UI Toolkit APIs in Unity 6000.7+.
+#if UNITY_6000_7_OR_NEWER
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace DCFApixels.WhimShader
+{
+    internal sealed class ShaderCodeLineNumbers : VisualElement
+    {
+        internal struct Number
+        {
+            internal int line;
+            internal Vector2 position;
+            internal Color color;
+            internal bool bold;
+        }
+        sealed class CurrentLineBackground : VisualElement
+        {
+            internal Rect drawnRect;
+            internal CurrentLineBackground(ShaderCodeLineNumbers owner)
+            {
+                name = "shaderCodeCurrentLine";
+                pickingMode = PickingMode.Ignore;
+                AddToClassList("whimshader-code-current-line");
+                generateVisualContent += context =>
+                {
+                    drawnRect = owner.HasActiveLine ? FillLine(context, this, owner.CurrentLineRect(this)) : default;
+                    owner.DrawInactiveSelection(context, this);
+                };
+                RegisterCallback<CustomStyleResolvedEvent>(_ => MarkDirtyRepaint());
+            }
+        }
+        static readonly CustomStyleProperty<Color> LineColor = new CustomStyleProperty<Color>("--whimshader-code-current-line-color");
+        static readonly CustomStyleProperty<Color> NumberColor = new CustomStyleProperty<Color>("--whimshader-code-current-number-color");
+        static readonly CustomStyleProperty<Color> SelectionColor = new CustomStyleProperty<Color>("--unity-selection-color");
+        readonly TextField field;
+        readonly TextElement text;
+        readonly Label metrics;
+        readonly Label activeNumber;
+        readonly CurrentLineBackground highlight;
+        readonly List<int> starts = new List<int>();
+        readonly List<string> numbers = new List<string>();
+        readonly List<Number> drawn = new List<Number>();
+        ScrollView scroll;
+        string source;
+        internal int LineCount => starts.Count;
+        internal int LineStart(int line) => starts[line];
+        internal int CurrentLine
+        {
+            get
+            {
+                return LineAt(field.textSelection.cursorIndex);
+            }
+        }
+        int LineAt(int position)
+        {
+            int index = starts.BinarySearch(Mathf.Clamp(position, 0, source?.Length ?? 0));
+            return index >= 0 ? index : Math.Max(0, ~index - 1);
+        }
+        internal bool HasActiveLine => HasTextFocus && CurrentLine == LineAt(field.textSelection.selectIndex);
+        internal bool HasTextFocus => field.enabledInHierarchy &&
+            field.panel?.focusController?.focusedElement is VisualElement focused &&
+            (focused == field || field.Contains(focused));
+
+        internal ShaderCodeLineNumbers(TextField field)
+        {
+            this.field = field;
+            text = (TextElement)field.textEdition;
+            highlight = new CurrentLineBackground(this);
+            field.EnableInClassList("whimshader-code-light", !EditorGUIUtility.isProSkin);
+            name = "shaderCodeLineNumbers";
+            pickingMode = PickingMode.Ignore;
+            AddToClassList("whimshader-code-line-numbers");
+            EnableInClassList("whimshader-code-line-numbers-light", !EditorGUIUtility.isProSkin);
+            metrics = new Label("0") { name = "shaderCodeLineMetrics", pickingMode = PickingMode.Ignore, enableRichText = false };
+            metrics.AddToClassList("whimshader-code-line-metrics");
+            Add(metrics);
+            activeNumber = new Label { name = "shaderCodeActiveLineNumber", pickingMode = PickingMode.Ignore, enableRichText = false };
+            activeNumber.AddToClassList("whimshader-code-active-number");
+            Add(activeNumber);
+            generateVisualContent += DrawNumbers;
+            RegisterCallback<CustomStyleResolvedEvent>(_ => Invalidate());
+            field.RegisterCallback<FocusInEvent>(_ => Invalidate(), TrickleDown.TrickleDown);
+            field.RegisterCallback<FocusOutEvent>(_ => Invalidate(), TrickleDown.TrickleDown);
+            field.RegisterCallback<ChangeEvent<string>>(evt => { if (evt.target == field) Refresh(evt.newValue); });
+            field.RegisterCallback<AttachToPanelEvent>(evt =>
+            {
+                if (evt.target != field) return;
+                scroll = text.GetFirstAncestorOfType<ScrollView>();
+                if (scroll == null) return;
+                var host = scroll.contentViewport.parent;
+                if (parent != host) host.Insert(host.IndexOf(scroll.contentViewport), this);
+                if (highlight.parent != scroll.contentViewport) scroll.contentViewport.hierarchy.Insert(0, highlight);
+                scroll.verticalScroller.valueChanged += OnScroll;
+                scroll.horizontalScroller.valueChanged += OnScroll;
+                scroll.contentViewport.RegisterCallback<GeometryChangedEvent>(OnGeometry);
+                text.RegisterCallback<GeometryChangedEvent>(OnGeometry);
+                field.textSelection.OnCursorIndexChange += Invalidate;
+                field.textSelection.OnSelectIndexChange += Invalidate;
+                Invalidate();
+            });
+            field.RegisterCallback<DetachFromPanelEvent>(evt =>
+            {
+                if (evt.target != field || scroll == null) return;
+                scroll.verticalScroller.valueChanged -= OnScroll;
+                scroll.horizontalScroller.valueChanged -= OnScroll;
+                scroll.contentViewport.UnregisterCallback<GeometryChangedEvent>(OnGeometry);
+                text.UnregisterCallback<GeometryChangedEvent>(OnGeometry);
+                field.textSelection.OnCursorIndexChange -= Invalidate;
+                field.textSelection.OnSelectIndexChange -= Invalidate;
+                scroll = null;
+            });
+            Refresh(field.value);
+        }
+        void Invalidate() { MarkDirtyRepaint(); highlight.MarkDirtyRepaint(); UpdateActiveNumber(); }
+        void UpdateActiveNumber()
+        {
+            bool active = HasActiveLine && scroll != null && panel != null && contentRect.width > 0 && text.resolvedStyle.fontSize > 0;
+            activeNumber.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!active) return;
+            ((INotifyValueChanged<string>)activeNumber).SetValueWithoutNotify(numbers[CurrentLine]);
+            activeNumber.style.fontSize = text.resolvedStyle.fontSize;
+            activeNumber.style.unityFontDefinition = text.resolvedStyle.unityFontDefinition;
+            activeNumber.style.color = customStyle.TryGetValue(NumberColor, out Color color) ? color : resolvedStyle.color;
+            Rect rect = CurrentLineRect(this);
+            activeNumber.style.left = contentRect.xMin;
+            activeNumber.style.width = contentRect.width;
+            activeNumber.style.height = rect.height;
+            float baseline = activeNumber.selection.GetCursorPositionFromStringIndex(0).y;
+            activeNumber.style.top = rect.yMax - baseline;
+        }
+        void OnScroll(float _) => Invalidate();
+        void OnGeometry(GeometryChangedEvent _) => Invalidate();
+
+        internal void Refresh(string value)
+        {
+            value ??= string.Empty;
+            if (string.Equals(source, value, StringComparison.Ordinal)) return;
+            source = value;
+            starts.Clear(); starts.Add(0);
+            for (int i = 0; i < value.Length; i++)
+            {
+                if (value[i] == '\r')
+                {
+                    if (i + 1 < value.Length && value[i + 1] == '\n') i++;
+                    starts.Add(i + 1);
+                }
+                else if (value[i] == '\n') starts.Add(i + 1);
+            }
+            while (numbers.Count < starts.Count) numbers.Add((numbers.Count + 1).ToString(CultureInfo.InvariantCulture));
+            EnableInClassList("whimshader-code-line-numbers-wide", starts.Count >= 1000);
+            EnableInClassList("whimshader-code-line-numbers-very-wide", starts.Count >= 100000);
+            Invalidate();
+        }
+
+        internal Rect CurrentLineRect(VisualElement target)
+        {
+            if (scroll == null || starts.Count == 0) return default;
+            int line = CurrentLine;
+            float baseline = field.textSelection.GetCursorPositionFromStringIndex(starts[line]).y;
+            float height = line + 1 < starts.Count
+                ? field.textSelection.GetCursorPositionFromStringIndex(starts[line + 1]).y - baseline
+                : line > 0 ? baseline - field.textSelection.GetCursorPositionFromStringIndex(starts[line - 1]).y : 0;
+            if (!(height > 0)) height = metrics.MeasureTextSize("0", 0, MeasureMode.Undefined, 0, MeasureMode.Undefined).y;
+            float top = target.WorldToLocal(text.LocalToWorld(text.contentRect.position + new Vector2(0, baseline - height))).y;
+            return new Rect(target.contentRect.xMin, top, target.contentRect.width, height);
+        }
+
+        static Rect FillLine(MeshGenerationContext context, VisualElement target, Rect rect)
+        {
+            if (!target.customStyle.TryGetValue(LineColor, out Color color)) return default;
+            return Fill(context, target, rect, color);
+        }
+
+        // Unity hides native text selection when the nested search input owns focus.
+        // Display that same code selection while keeping keyboard input in the query.
+        void DrawInactiveSelection(MeshGenerationContext context, VisualElement target)
+        {
+            if (!(field is ShaderCodeField code) || !code.SearchHasFocus || !HasActiveLine ||
+                field.textSelection.cursorIndex == field.textSelection.selectIndex) return;
+            if (!text.customStyle.TryGetValue(SelectionColor, out Color color) &&
+                !field.customStyle.TryGetValue(SelectionColor, out color)) return;
+            int start = Math.Min(field.textSelection.cursorIndex, field.textSelection.selectIndex);
+            int end = Math.Max(field.textSelection.cursorIndex, field.textSelection.selectIndex);
+            Vector2 a = field.textSelection.GetCursorPositionFromStringIndex(start);
+            Vector2 b = field.textSelection.GetCursorPositionFromStringIndex(end);
+            Rect rect = CurrentLineRect(target);
+            rect.x = target.WorldToLocal(text.LocalToWorld(text.contentRect.position + a)).x;
+            rect.width = b.x - a.x;
+            Fill(context, target, rect, color);
+        }
+
+        static Rect Fill(MeshGenerationContext context, VisualElement target, Rect rect, Color color)
+        {
+            rect = Rect.MinMaxRect(Math.Max(rect.xMin, target.contentRect.xMin), Math.Max(rect.yMin, target.contentRect.yMin),
+                Math.Min(rect.xMax, target.contentRect.xMax), Math.Min(rect.yMax, target.contentRect.yMax));
+            if (rect.width <= 0 || rect.height <= 0) return default;
+            var painter = context.painter2D;
+            painter.fillColor = color;
+            painter.BeginPath();
+            painter.MoveTo(new Vector2(rect.xMin, rect.yMin));
+            painter.LineTo(new Vector2(rect.xMax, rect.yMin));
+            painter.LineTo(new Vector2(rect.xMax, rect.yMax));
+            painter.LineTo(new Vector2(rect.xMin, rect.yMax));
+            painter.ClosePath(); painter.Fill();
+            return rect;
+        }
+
+        void DrawNumbers(MeshGenerationContext context)
+        {
+            drawn.Clear();
+            if (scroll == null || text.panel == null || contentRect.width <= 0 || contentRect.height <= 0) return;
+            float calibration = metrics.selection.GetCursorPositionFromStringIndex(0).y;
+            float numberHeight = metrics.MeasureTextSize("0", 0, MeasureMode.Undefined, 0, MeasureMode.Undefined).y;
+            Vector2 origin = this.WorldToLocal(text.LocalToWorld(text.contentRect.position));
+            float Baseline(int line) => origin.y + field.textSelection.GetCursorPositionFromStringIndex(starts[line]).y;
+            int low = 0, high = starts.Count;
+            while (low < high)
+            {
+                int middle = (low + high) / 2;
+                if (Baseline(middle) - calibration + numberHeight < contentRect.yMin) low = middle + 1;
+                else high = middle;
+            }
+            var font = text.resolvedStyle.unityFontDefinition.fontAsset;
+            float size = text.resolvedStyle.fontSize;
+            Color color = resolvedStyle.color;
+            bool focused = HasActiveLine;
+            int current = CurrentLine;
+            Color activeColor = customStyle.TryGetValue(NumberColor, out Color active) ? active : color;
+            if (focused) FillLine(context, this, CurrentLineRect(this));
+            for (int line = low; line < starts.Count; line++)
+            {
+                float y = Baseline(line) - calibration;
+                if (y > contentRect.yMax) break;
+                string number = numbers[line];
+                float width = metrics.MeasureTextSize(number, 0, MeasureMode.Undefined, 0, MeasureMode.Undefined).x;
+                var position = new Vector2(contentRect.xMax - width, y);
+                Color tint = focused && line == current ? activeColor : color;
+                bool bold = focused && line == current;
+                if (!bold) context.DrawText(number, position, size, tint, font);
+                drawn.Add(new Number { line = line, position = position, color = tint, bold = bold });
+            }
+        }
+    }
+}
+#endif

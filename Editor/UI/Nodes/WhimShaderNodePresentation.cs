@@ -197,6 +197,7 @@ namespace DCFApixels.WhimShader
             Image nativeImage, displayImage;
             WhimShaderNodePreview previewView;
             WhimShaderNodeMessageBadge messageBadge;
+            WhimShaderFunctionEditor functionEditor;
             PreviewRenderData renderData;
             internal AbstractMaterialNode Model { get; }
             internal WhimShaderNodePreviewContext Preview { get; private set; }
@@ -244,6 +245,12 @@ namespace DCFApixels.WhimShader
                     changes.Class(view.Q("previewFiller"), "whimshader-presentation-hidden");
                     view.RefreshExpandedState();
                 }
+                if (Model is WhimShaderCustomFunctionNode function)
+                {
+                    functionEditor = new WhimShaderFunctionEditor(function, view, owner.changed);
+                    view.extensionContainer.Add(functionEditor);
+                    view.RefreshExpandedState();
+                }
                 Model.RegisterCallback(OnModified);
             }
 
@@ -251,6 +258,7 @@ namespace DCFApixels.WhimShader
 
             internal void Refresh()
             {
+                functionEditor?.Refresh();
                 if (metadata) return;
                 owner.portReplacement?.Apply((IShaderNodeView)view, old =>
                 {
@@ -337,6 +345,7 @@ namespace DCFApixels.WhimShader
                 if (renderData != null) renderData.onPreviewChanged -= Render;
                 if (Preview != null) owner.OnPreviewRemoved(Preview);
                 previewView?.Dispose(); messageBadge?.RemoveFromHierarchy();
+                functionEditor?.Dispose();
                 if (Preview != null) { Preview.View = null; Preview.Message = null; }
                 view.RemoveFromClassList("whimshader-shader-graph-node--error");
                 foreach (var port in ports.Values) port.Dispose(); ports.Clear();

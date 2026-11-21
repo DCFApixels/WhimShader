@@ -1,0 +1,115 @@
+/* Copied from WhimTexSplitView.uss. Copyright (c) 2026 Mikhail; MIT; see LICENSE.WhimTex.md. */
+.whimshader-shader-fx-code {
+    height: 320px;
+    flex-shrink: 0;
+}
+
+.whimshader-code-line-numbers,
+.whimshader-code-current-line {
+    --whimshader-code-current-line-color: rgba(255, 255, 255, 0.045);
+    --whimshader-code-current-number-color: rgb(190, 190, 190);
+}
+
+.whimshader-code-light .whimshader-code-line-numbers,
+.whimshader-code-light .whimshader-code-current-line {
+    --whimshader-code-current-line-color: rgba(0, 0, 0, 0.035);
+    --whimshader-code-current-number-color: rgb(55, 55, 55);
+}
+
+.whimshader-code-current-line,
+.whimshader-code-search-match {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.whimshader-shader-fx-code > .unity-text-field__input {
+    -unity-text-align: upper-left;
+    white-space: nowrap;
+    -unity-font-definition: url("Fonts/CascadiaMono/CascadiaMono-Regular.asset");
+}
+
+.whimshader-code-search-overlay {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    align-items: flex-end;
+}
+
+.whimshader-code-search {
+    width: 100%;
+    max-width: 360px;
+    flex-shrink: 0;
+}
+
+.whimshader-code-search > .unity-toolbar-search-field {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: auto;
+    min-width: 0;
+}
+
+.whimshader-code-search > .unity-label {
+    -unity-text-align: middle-center;
+    flex-shrink: 0;
+}
+
+.whimshader-code-line-numbers {
+    -unity-font-definition: url("Fonts/CascadiaMono/CascadiaMono-Regular.asset");
+    width: 36px;
+    flex-shrink: 0;
+    align-self: stretch;
+    overflow: hidden;
+    padding-right: 6px;
+    margin-right: 4px;
+    border-right-width: 1px;
+    border-right-color: rgba(128, 128, 128, 0.25);
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgb(135, 135, 135);
+}
+
+.whimshader-code-line-numbers-wide {
+    width: 44px;
+}
+
+.whimshader-code-line-numbers-very-wide {
+    width: 60px;
+}
+
+.whimshader-code-line-numbers-light {
+    color: rgb(105, 105, 105);
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.whimshader-code-line-metrics {
+    position: absolute;
+    visibility: hidden;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+}
+
+.whimshader-code-active-number {
+    position: absolute;
+    -unity-font-style: bold;
+    -unity-text-align: upper-right;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+}
+
+/* Compact node variant, copied from WhimTex ShaderGraphWindow.uss. */
+.whimshader-shader-graph-function-code {
+    min-width: 0;
+    flex-shrink: 1;
+    min-height: 80px;
+    height: 160px;
+    margin: 0;
+}
+.whimshader-shader-graph-function-code > .unity-text-field__input {
+    min-width: 0;
+}

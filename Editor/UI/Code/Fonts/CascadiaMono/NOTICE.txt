@@ -1,0 +1,9 @@
+Cascadia Mono Regular and Bold, from Cascadia Code v2407.24.
+Upstream: https://github.com/microsoft/cascadia-code/releases/tag/v2407.24
+Archive: CascadiaCode-2407.24.zip
+Entries: ttf/static/CascadiaMono-Regular.ttf and ttf/static/CascadiaMono-Bold.ttf
+Copied from WhimTex's bundled fonts; the TTF files are unmodified.
+TextCore font assets retain the original font settings, atlas and weight mapping,
+with new local GUIDs to keep WhimShader independent from WhimTex.
+Copyright (c) 2019 - Present, Microsoft Corporation.
+Licensed under SIL Open Font License 1.1; see LICENSE.txt.

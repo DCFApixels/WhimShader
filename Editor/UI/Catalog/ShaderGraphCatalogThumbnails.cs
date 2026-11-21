@@ -17,6 +17,53 @@ namespace DCFApixels.WhimShader
         static Texture2D atlas;
         static Dictionary<string, Rect> regions;
 
+        // Reuse the WhimTex atlas for related native Shader Graph nodes. Resolve only
+        // thumbnails here: compact icons, category colors and node identities stay intact.
+        internal static string ResolveKind(string kind) => kind switch
+        {
+            // Texture resources and reads share the same reference landscape.
+            "SampleTexture2DLOD" or "SampleTexture2DArray" or "SampleTexture3D" or
+            "SampleCubemap" or "SampleReflectedCubemap" or "SampleVirtualTexture" or
+            "GatherTexture2D" or "SampleElementTexture" => "SampleTexture",
+            "Texture2DAsset" or "Texture2DArrayAsset" or "Texture3DAsset" or
+            "CubemapAsset" or "ProceduralVirtualTexture" => "SampleTexture",
+            "URPSampleBuffer" or "FilterInput" or "SceneColor" or "TerrainTexture" or
+            "Self" or "LightTexture" or "Preview" => "SampleInput",
+            "FilterTexelSize" or "ElementTextureSize" or "Size" => "TextureSize",
+
+            // Value, coordinate and matrix families.
+            "Integer" or "Slider" => "Value",
+            "Matrix2x2" or "Matrix3x3" or "Matrix4x4" or "TransformationMatrix" => "MatrixConstruction",
+            "Gradient" or "DefaultGradient" => "SampleGradient",
+            "Color" or "VertexColor" or "ElementTint" => "MixColor",
+            "InstanceID" or "VertexID" or "EyeIndex" or "SliceIndex/CubemapFace" => "InstanceIndex",
+            "Position" or "ScreenPosition" => "CanvasPosition",
+            "NormalVector" or "TangentVector" or "BitangentVector" or
+            "ViewDirection" or "ViewVector" => "Normalize",
+            "ElementLayoutUV" or "ElementTextureUV" or "NormalizeFilterUV" => "UV",
+            "ParticleTexcoords" => "UV",
+            "Transforms" => "Transform",
+            "AnimFrame" => "Flipbook",
+
+            // Equivalent operations, or the closest visual example of their family.
+            "DegreesToRadians" or "RadiansToDegrees" => "ConvertAngle",
+            "NormalFromHeight" or "NormalFromTexture" => "HeightToNormal",
+            "ColorspaceConversion" => "ConvertColor",
+            "InvertColors" => "OneMinus",
+            "Flip" => "Negate",
+            "ElementOpacity" => "SetAlpha",
+            "Rotate" => "TransformUV",
+            "TilingAndOffset" => "TileUV",
+            "Spherize" => "BulgePinch",
+            "SplitTextureTransform" => "Split",
+            "Dropdown" or "Keyword" => "Switch",
+            "BranchOnInputConnection" => "Select",
+            "Polygon" or "RoundedPolygon" => "Shape",
+            "MainLightDirection" => "LightDirection",
+            "Ambient" or "BakedGI" or "ReflectionProbe" => "NormalLighting",
+            _ => kind
+        };
+
         internal static bool TryGet(string kind, out Texture2D texture, out Rect uv)
         {
             texture = null; uv = default;
@@ -33,7 +80,7 @@ namespace DCFApixels.WhimShader
                         regions[entry.kind] = entry.uv;
                 }
             }
-            if (atlas == null || !regions.TryGetValue(kind, out uv)) return false;
+            if (atlas == null || !regions.TryGetValue(ResolveKind(kind), out uv)) return false;
             texture = atlas; return true;
         }
 

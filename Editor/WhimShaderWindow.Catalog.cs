@@ -6,6 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.Graphing;
 using UnityEditor.ShaderGraph;
 using UnityEditor.ShaderGraph.Drawing;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -52,8 +53,8 @@ namespace DCFApixels.WhimShader
 
         List<SearchTreeEntry> ToSearchTree(IEnumerable<NodeEntry> sourceEntries)
         {
-            var leaves = sourceEntries.Where(e => !Graph.activeTargets.Any() ||
-                Graph.activeTargets.Any(t => t.IsNodeAllowedByTarget(e.node.GetType())))
+            var leaves = sourceEntries.Where(e => e.node.GetType() != typeof(CustomFunctionNode) && (!Graph.activeTargets.Any() ||
+                Graph.activeTargets.Any(t => t.IsNodeAllowedByTarget(e.node.GetType()))))
                 .Select(e => (entry: e, path: CatalogPath(e))).OrderBy(e => RootOrder(e.path[0]))
                 .ThenBy(e => string.Join("/", e.path), StringComparer.OrdinalIgnoreCase).ToArray();
             var result = new List<SearchTreeEntry> { new SearchTreeGroupEntry(new GUIContent("Create Node"), 0) };
@@ -100,9 +101,40 @@ namespace DCFApixels.WhimShader
                 "Voronoi" => "CellularNoise", "UnityPBR" or "SceneLighting" => "NormalLighting",
                 "SampleTexture2D" => "SampleTexture", "SampleGradientLUT" => "SampleGradient", "SampleCurveLUT" => "SampleCurve",
                 "Branch" => "Select", "Comparison" => "Compare", "Modulo" => "Modulo", _ => kind };
-            if (choice?.entry.node is PropertyNode) kind = "Parameter";
+            if (choice?.entry.node is PropertyNode property) kind = property.property switch
+            {
+                WhimGradientShaderProperty => "SampleGradient",
+                WhimCurveShaderProperty => "SampleCurve",
+                { propertyType: PropertyType.Float or PropertyType.Vector2 or PropertyType.Vector3 or PropertyType.Vector4 } => "Value",
+                { propertyType: PropertyType.Color } => "Color",
+                { propertyType: PropertyType.Matrix2 or PropertyType.Matrix3 or PropertyType.Matrix4 } => "MatrixConstruction",
+                { propertyType: PropertyType.Texture2D or PropertyType.Texture2DArray or PropertyType.Texture3D or
+                    PropertyType.Cubemap or PropertyType.VirtualTexture } => "SampleTexture",
+                { propertyType: PropertyType.Gradient } => "SampleGradient",
+                _ => "Parameter"
+            };
             if (choice?.entry.node is SubGraphNode) kind = "SubGraph";
             return ShaderGraphCatalogIcon.ForNode(path, kind);
+        }
+
+        internal string CatalogThumbnailReport()
+        {
+            var lines = new List<string>();
+            int total = 0, covered = 0, reused = 0;
+            foreach (var entry in CreateNodeSearchTree())
+            {
+                if (entry is SearchTreeGroupEntry) continue;
+                var choice = (CatalogChoice)entry.userData;
+                string path = string.Join("/", CatalogPath(choice.entry));
+                string kind = CatalogAppearance(entry, path).kind;
+                string resolved = ShaderGraphCatalogThumbnails.ResolveKind(kind);
+                bool available = ShaderGraphCatalogThumbnails.TryGet(kind, out _, out _);
+                total++; if (available) covered++;
+                if (available && resolved != kind) reused++;
+                lines.Add($"{(available ? "thumbnail" : "icon")}\t{path}\t{resolved}");
+            }
+            lines.Insert(0, $"{covered}/{total} entries with thumbnails; {reused} use shared atlas aliases.");
+            return string.Join("\n", lines);
         }
 
         bool CreateNodeChoice(object choice, Vector2 position, ContextView context = null, ShaderPort connectedPort = null)

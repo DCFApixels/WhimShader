@@ -148,6 +148,11 @@ namespace DCFApixels.WhimShader
             try
             {
                 DisposeView(); rootVisualElement.Clear();
+                if (Graph != null)
+                {
+                    var upgraded = WhimShaderFunctions.UpgradeLegacy(Graph);
+                    if (!ReferenceEquals(upgraded, Graph)) { Graph.OnDisable(); graphObject.graph = upgraded; }
+                }
                 rootVisualElement.AddToClassList("whimshader-shader-graph");
                 rootVisualElement.AddToClassList("whimshader-theme");
                 rootVisualElement.AddToClassList("whimshader-native");

@@ -47,6 +47,14 @@ The same LUT can be sampled in Vertex and Fragment with explicit LOD. Imported g
 
 Node and final previews have **Image**, **Height** and **3D** presentation and **RGBA / R / G / B / A** channel selection. Nodes with multiple outputs can select the displayed output. Presentation settings are stored in the graph. Height reuses WhimTex's horizon renderer, height-channel/scale/texture/range settings and preview controls; it does not change the generated shader. Final RGBA buttons support independent channel combinations and drag toggling. 3D evaluates the actual shader on a mesh.
 
+## Custom Function
+
+Create **HLSL → Custom Function** to start with `Out = In;`. Edit the code directly on the node, configure inputs/outputs under **Ports**, then press **Compile** (or Ctrl/Command+Enter). The CodeArea includes syntax coloring, line numbers, search, selection indentation, automatic indentation and Undo/Redo. Drag its lower-right handle to resize it.
+
+**Body** contains statements inside a generated function and supports `$precision`. **File** selects a project/package HLSL file and an entry function; ports are discovered from its signature, including matrices, resource types, return values and `inout`. **Source** contains complete function definitions and helpers. **Convert to Code** embeds a file for editing and preserves its relative include locations. **Refresh** rescans source; in File mode it also recompiles the function.
+
+Code and port edits remain a saved draft until compilation succeeds. An invalid draft leaves the applied function and its connections intact. Renaming a body port keeps its ID; removing a port or changing its direction removes that port's existing connections when applied. File discovery reads declarations without evaluating preprocessor branches; ambiguous entry declarations require an unambiguous wrapper.
+
 ## Integration boundary
 
 WhimShader does not patch Unity package files or use reflection to access their private members. Its Editor sources compile through an assembly reference into URP.Editor, which already has Shader Graph friend access. Its small runtime LUT helpers use URP.Runtime's assembly reference so the Editor integration can reference them without altering Unity's asmdefs. This is a version-pinned internal API dependency, not a promise of compatibility with arbitrary future Unity releases.

@@ -10,6 +10,12 @@ namespace DCFApixels.WhimShader
 {
     public static class WhimShaderUIValidation
     {
+        public static string CatalogThumbnails(WhimShaderWindow window)
+        {
+            if (window?.PreviewService == null) throw new InvalidOperationException("No initialized WhimShader window.");
+            return window.CatalogThumbnailReport();
+        }
+
         public static object Snapshot(WhimShaderWindow window = null)
         {
             window ??= EditorWindow.focusedWindow as WhimShaderWindow;

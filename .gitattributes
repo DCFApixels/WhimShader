@@ -1,2 +1,3 @@
-# Unity writes a space after empty scalar keys in generated importer metadata.
+# Unity writes a space after empty scalar keys in generated YAML.
 *.meta whitespace=-blank-at-eol
+*.asset whitespace=-blank-at-eol
