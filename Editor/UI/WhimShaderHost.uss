@@ -1,0 +1,12 @@
+.whimshader-docked-native { border-width: 0; border-radius: 0; }
+.whimshader-hidden { display: none; }
+.whimshader-docked-native > #header { display: none; }
+.whimshader-generated-source { flex-shrink: 0; margin: 0; }
+.whimshader-generated-source > Toggle { flex-direction: row; }
+.whimshader-compile-status { flex-grow: 1; -unity-text-align: middle-right; color: rgba(200,200,200,0.7); padding-right: 6px; }
+.whimshader-catalog { background-color: rgba(0,0,0,0.09); padding-left: 3px; }
+.whimshader-catalog-row { flex-direction: row; align-items: center; height: 22px; flex-shrink: 0; background-color: rgb(56,56,56); padding-right: 3px; }
+.whimshader-catalog-row:hover { background-color: rgb(48,48,48); }
+.whimshader-catalog-group { background-color: rgba(0,0,0,0); }
+.whimshader-catalog-stripe { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; }
+.whimshader-catalog-row > Label { flex-shrink: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

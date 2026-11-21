@@ -1,0 +1,2 @@
+# Unity writes a space after empty scalar keys in generated importer metadata.
+*.meta whitespace=-blank-at-eol

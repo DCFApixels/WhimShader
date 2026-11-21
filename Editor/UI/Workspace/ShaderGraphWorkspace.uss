@@ -1,0 +1,57 @@
+/* Shared theme and menu rules extracted from WhimTexSplitView.uss.
+   Load before WhimShaderWindow.uss; add whimshader-theme to the window root. */
+.whimshader-theme {
+    --whimshader-surface: #383838;
+    --whimshader-surface-light: #c4c4c4;
+    --whimshader-header: #454545;
+    --whimshader-header-light: #d0d0d0;
+    --whimshader-icon: #d2d2d2;
+    --whimshader-neutral-33: #333333;
+    --whimshader-hover-overlay: rgba(128, 128, 128, 0.25);
+}
+
+.unity-toolbar-menu.whimshader-layer-menu-button {
+    --menu-hover: rgba(255, 255, 255, 0.12);
+    --menu-pressed: rgba(255, 255, 255, 0.2);
+    --menu-dot: var(--whimshader-icon);
+    flex-direction: column;
+    width: 14px;
+    min-width: 0;
+    height: 22px;
+    flex-shrink: 0;
+    margin: 0 0 0 2px;
+    padding: 0;
+    border-width: 0;
+    border-radius: 2px;
+    background-image: none;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+}
+
+.unity-toolbar-menu.whimshader-layer-menu-button--light {
+    --menu-hover: rgba(0, 0, 0, 0.1);
+    --menu-pressed: rgba(0, 0, 0, 0.18);
+    --menu-dot: var(--whimshader-neutral-33);
+}
+
+.unity-toolbar-menu.whimshader-layer-menu-button:hover {
+    background-color: var(--menu-hover);
+}
+
+.unity-toolbar-menu.whimshader-layer-menu-button:active {
+    background-color: var(--menu-pressed);
+}
+
+.whimshader-layer-menu-dot {
+    width: 2px;
+    height: 2px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    border-radius: 1px;
+    background-color: var(--menu-dot);
+}
+
+/* WhimTexSplitView.uss LayerActionIcon dimensions. */
+.whimshader-layer-action-icon { width: 16px; height: 16px; flex-shrink: 0; }

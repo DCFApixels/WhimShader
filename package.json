@@ -1,0 +1,12 @@
+{
+  "name": "com.dcfapixels.whimshader",
+  "version": "0.1.0",
+  "displayName": "WhimShader",
+  "description": "A URP shader authoring workspace with shared vertex and fragment graphs and ShaderLab output.",
+  "unity": "6000.7",
+  "author": { "name": "DCFApixels", "url": "https://github.com/DCFApixels" },
+  "dependencies": {
+    "com.unity.shadergraph": "17.7.0",
+    "com.unity.render-pipelines.universal": "17.7.0"
+  }
+}

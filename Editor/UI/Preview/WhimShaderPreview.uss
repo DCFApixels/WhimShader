@@ -1,0 +1,138 @@
+/* Copied preview/footer/channel styles from WhimTexSplitView.uss. MIT. */
+.whimshader-output-preview-footer { min-height: 20px; flex-shrink: 0; overflow: hidden; }
+.whimshader-output-preview-title {
+    height: 20px;
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-color: rgba(0, 0, 0, 0.45);
+    border-bottom-color: rgba(0, 0, 0, 0.45);
+    -unity-font-style: bold;
+    cursor: resize-vertical;
+}
+.whimshader-output-preview-grip {
+    flex-grow: 1;
+    height: 5px;
+    margin-left: 4px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgb(128, 128, 128);
+}
+.whimshader-output-preview-surface {
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+    background-color: rgb(36, 36, 36);
+}
+.whimshader-output-preview-surface--hidden { display: none; }
+.whimshader-output-preview-image { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
+.whimshader-preview-loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: rgb(235, 235, 235);
+}
+
+
+.unity-button.whimshader-channel-button {
+    --channel-fill: #6a6a6e;
+    --channel-hover: #79797d;
+    --channel-text: #eeeeef;
+    --channel-border: #939397;
+    width: 24px;
+    height: 18px;
+    flex-shrink: 0;
+    margin: 0 0 0 2px;
+    padding: 1px 0 0 0;
+    background-image: none;
+    background-color: #252527;
+    color: #a2a2a6;
+    border-width: 1px;
+    border-top-color: #111113;
+    border-left-color: #19191b;
+    border-right-color: #424246;
+    border-bottom-color: #56565a;
+    border-radius: 2px;
+    font-size: 10px;
+}
+
+.unity-button.whimshader-channel-button:hover {
+    background-color: #2e2e31;
+}
+
+.unity-button.whimshader-channel-button--enabled {
+    padding: 0;
+    background-color: var(--channel-fill);
+    color: var(--channel-text);
+    border-color: var(--channel-border);
+}
+
+.unity-button.whimshader-channel-button--enabled:hover {
+    background-color: var(--channel-hover);
+}
+
+.unity-button.whimshader-channel-button--r {
+    --channel-fill: #92555d;
+    --channel-hover: #a2646c;
+    --channel-text: #ead9d9;
+    --channel-border: #b77981;
+}
+
+.unity-button.whimshader-channel-button--g {
+    --channel-fill: #487c59;
+    --channel-hover: #578b68;
+    --channel-text: #dce8df;
+    --channel-border: #6ba27e;
+}
+
+.unity-button.whimshader-channel-button--b {
+    --channel-fill: #4b70a0;
+    --channel-hover: #5a7faf;
+    --channel-text: #dce3ed;
+    --channel-border: #7298c5;
+}
+.whimshader-layer-preview-channels {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: 4px;
+    cursor: arrow;
+}
+.whimshader-layer-preview-controls {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: arrow;
+}
+.whimshader-output-preview-title > Label {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* ToolbarToggle supplies the native toolbar height, padding and selected state. */
+.whimshader-layer-preview-mode-icon { width: 16px; height: 16px; }
+.whimshader-layer-preview-mode > .unity-toggle__input > .unity-toggle__checkmark { display: none; }
+.unity-button.whimshader-channel-button.whimshader-layer-preview-channel {
+    --channel-fill: #696969;
+    --channel-hover: #797979;
+    --channel-text: #eeeeee;
+    --channel-border: #939393;
+    width: 20px;
+    height: 16px;
+    min-height: 0;
+    -unity-font-style: normal;
+    cursor: arrow;
+}
+
+.whimshader-hidden { display: none; }
+.whimshader-final-preview { overflow: hidden; }
+.whimshader-final-preview #layer-preview { min-width: 0; min-height: 0; flex-grow: 1; }
+.whimshader-final-preview #layer-preview-header > Label { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.whimshader-preview-message { position: absolute; left: 0; right: 0; top: 0; bottom: 0; white-space: normal; -unity-text-align: middle-center; }

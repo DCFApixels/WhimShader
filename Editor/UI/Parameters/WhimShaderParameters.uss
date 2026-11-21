@@ -1,0 +1,63 @@
+.whimshader-parameters-panel {
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+}
+.whimshader-parameter-scroll { flex-grow: 1; min-width: 0; }
+/* WhimTex ShaderGraphWindow.uss parameter blocks, with adapter class names. */
+.whimshader-parameter-block {
+    border-width: 1px;
+    border-color: rgba(128, 128, 128, 0.16);
+    border-radius: 3px;
+    background-color: rgba(128, 128, 128, 0.07);
+    margin: 2px 1px;
+    padding: 1px 0;
+    min-width: 0;
+}
+.whimshader-parameter-block:hover { background-color: rgba(128, 128, 128, 0.14); }
+.whimshader-parameter-block > .unity-foldout__content { margin-left: 0; padding: 0 2px; min-width: 0; }
+.whimshader-parameter-block-header .unity-toggle__text {
+    flex-grow: 1; flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+}
+.whimshader-parameter-block-header > .unity-base-field__input { min-width: 0; flex-shrink: 1; }
+.whimshader-parameter-type {
+    color: var(--unity-colors-label-text-secondary); opacity: 0.6;
+    flex-shrink: 1; min-width: 0; max-width: 45%; overflow: hidden; text-overflow: ellipsis;
+    -unity-text-align: middle-right;
+}
+.whimshader-parameter-exposed { min-width: 0; }
+.whimshader-parameters-panel .unity-base-field {
+    min-width: 0;
+    flex-shrink: 1;
+}
+/* Keep native row heights and native composite component-label metrics. */
+.whimshader-parameters-panel .unity-base-field > .unity-base-field__label {
+    min-width: 0;
+    flex-shrink: 1;
+}
+.whimshader-parameters-panel .unity-base-field > .unity-base-field__input {
+    min-width: 0;
+}
+.whimshader-parameter-heading { -unity-font-style: bold; margin-top: 4px; }
+.whimshader-parameter-compound,
+.whimshader-parameter-value-group { min-width: 0; }
+.whimshader-parameter-tabs { min-width: 0; }
+.whimshader-parameter-root-drop,
+.whimshader-parameter-group-drop {
+    padding: 4px;
+    color: var(--unity-colors-label-text-secondary);
+}
+.whimshader-parameter-drop-end { min-height: 16px; flex-grow: 1; }
+.whimshader-parameter-drop--inside {
+    background-color: var(--unity-colors-button-background-hover);
+}
+.whimshader-parameter-drop--before { border-top-width: 2px; border-top-color: var(--unity-colors-highlight-background); }
+.whimshader-parameter-drop--after { border-bottom-width: 2px; border-bottom-color: var(--unity-colors-highlight-background); }
+.whimshader-parameter-native-settings { min-width: 0; }
+.whimshader-selected-node-inspector { min-width: 0; margin-top: 4px; }
+
+.whimshader-parameter-node-hover #selection-border {
+    background-color: rgba(68, 192, 255, 0.4);
+    border-color: rgb(68, 192, 255);
+    border-width: 2px;
+}

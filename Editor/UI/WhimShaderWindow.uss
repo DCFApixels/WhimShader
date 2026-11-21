@@ -1,0 +1,913 @@
+.whimshader-shader-graph-body {
+    flex-grow: 1;
+    min-height: 0;
+}
+.whimshader-shader-graph-properties {
+    flex-grow: 1;
+    min-height: 0;
+}
+.whimshader-shader-graph-tabs,
+.whimshader-shader-graph-tab,
+.whimshader-shader-graph-palette,
+.whimshader-shader-graph-palette-tree {
+    flex-grow: 1;
+    min-height: 0;
+    min-width: 0;
+}
+.whimshader-shader-graph-palette-search { flex-grow: 1; flex-shrink: 1; min-width: 0; }
+.whimshader-shader-graph-palette { background-color: var(--unity-colors-window-background); }
+.whimshader-shader-graph-palette-tree { background-color: rgba(0, 0, 0, 0.09); }
+.whimshader-shader-graph-palette-tree .unity-tree-view__item { padding-left: 3px; }
+.whimshader-shader-graph-palette-node-idle {
+    background-color: var(--unity-colors-window-background);
+}
+.whimshader-shader-graph-palette-node-idle:hover {
+    background-color: transparent;
+}
+.whimshader-shader-graph-palette-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; }
+/* Native TreeView checkmark measured in Editor 6000.7.0a6: 13 logical px. */
+.whimshader-shader-graph-palette-tree .unity-tree-view__item-toggle {
+    width: 13px;
+    min-width: 13px;
+    margin-left: 0;
+    margin-right: 0;
+}
+.whimshader-shader-graph-palette-tree .unity-foldout__checkmark { margin-left: 0; margin-right: 0; }
+.whimshader-shader-graph-palette-tree .whimshader-graph-catalog-icon {
+    width: 16px;
+    padding-left: 0;
+    margin-right: 2px;
+}
+.whimshader-shader-graph-palette-row {
+    flex-grow: 1;
+    min-width: 0;
+    align-self: stretch;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+}
+.whimshader-shader-graph-palette-label {
+    flex-grow: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.whimshader-shader-graph-palette-empty { margin: 4px; }
+.whimshader-shader-graph-parameter {
+    border-width: 1px;
+    border-color: rgba(128, 128, 128, 0.16);
+    border-radius: 3px;
+    background-color: rgba(128, 128, 128, 0.07);
+    margin: 2px 1px;
+    padding: 1px 0;
+    min-width: 0;
+}
+.whimshader-shader-graph-parameter > .unity-foldout__content { margin-left: 0; padding: 0 2px; }
+.whimshader-shader-graph-parameter-children { padding-left: 3px; min-width: 0; }
+.whimshader-shader-graph-parameter-title { flex-direction: row; align-items: center; }
+.whimshader-shader-graph-parameter-title > .unity-base-field { flex-grow: 1; min-width: 0; }
+.whimshader-shader-graph-parameter-title > .unity-button { flex-shrink: 0; }
+.whimshader-shader-graph-parameter-kind {
+    color: var(--unity-colors-label-text-secondary);
+    opacity: 0.6;
+    flex-shrink: 1; min-width: 0; max-width: 45%;
+    overflow: hidden; text-overflow: ellipsis; -unity-text-align: middle-right;
+}
+.whimshader-shader-graph-parameter-drop { background-color: rgba(90, 160, 210, 0.15); }
+.whimshader-shader-graph-parameter-toolbar { justify-content: flex-end; }
+.unity-toolbar-menu.whimshader-shader-graph-parameter-add {
+    width: 22px;
+    margin: 0;
+    color: var(--menu-dot);
+}
+.whimshader-shader-graph-parameter-add > .unity-toolbar-menu__text,
+.whimshader-shader-graph-parameter-add > .unity-toolbar-menu__arrow { display: none; }
+.whimshader-shader-graph-parameter:hover {
+    background-color: rgba(128, 128, 128, 0.14);
+}
+.whimshader-shader-graph-parameter-node.whimshader-shader-graph-parameter-highlight #selection-border {
+    background-color: rgba(68, 192, 255, 0.4);
+    border-color: rgba(68, 192, 255, 1);
+    border-width: 2px;
+}
+.whimshader-shader-graph-area {
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+.whimshader-shader-graph-floating-panel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-width: 1px;
+    border-color: var(--unity-colors-default-border);
+    background-color: var(--unity-colors-window-background);
+}
+.whimshader-shader-graph-layer-preview { cursor: move-arrow; }
+.whimshader-shader-graph-panel--left { border-left-color: var(--unity-colors-highlight-background); }
+.whimshader-shader-graph-panel--right { border-right-color: var(--unity-colors-highlight-background); }
+.whimshader-shader-graph-panel--top { border-top-color: var(--unity-colors-highlight-background); }
+.whimshader-shader-graph-panel--bottom { border-bottom-color: var(--unity-colors-highlight-background); }
+.whimshader-shader-graph-layer-preview > #layer-preview { flex-grow: 1; min-height: 0; }
+.whimshader-shader-graph-layer-preview #layer-preview-header { flex-shrink: 0; cursor: move-arrow; }
+.whimshader-shader-graph-layer-preview #layer-preview-header > Label { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.whimshader-shader-graph-panel-resize { position: absolute; }
+.whimshader-shader-graph-panel-resize--left { left: 0; top: 8px; bottom: 8px; width: 6px; cursor: resize-horizontal; }
+.whimshader-shader-graph-panel-resize--right { right: 0; top: 8px; bottom: 8px; width: 6px; cursor: resize-horizontal; }
+.whimshader-shader-graph-panel-resize--top { left: 8px; right: 8px; top: 0; height: 4px; cursor: resize-vertical; }
+.whimshader-shader-graph-panel-resize--bottom { left: 8px; right: 8px; bottom: 0; height: 6px; cursor: resize-vertical; }
+.whimshader-shader-graph-panel-resize--top-left { left: 0; top: 0; width: 8px; height: 8px; cursor: resize-up-left; }
+.whimshader-shader-graph-panel-resize--top-right { right: 0; top: 0; width: 8px; height: 8px; cursor: resize-up-right; }
+.whimshader-shader-graph-panel-resize--bottom-left { left: 0; bottom: 0; width: 8px; height: 8px; cursor: resize-up-right; }
+.whimshader-shader-graph-panel-resize--bottom-right { right: 0; bottom: 0; width: 8px; height: 8px; cursor: resize-up-left; }
+.whimshader-shader-graph-parameter-header .unity-toggle__text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.whimshader-shader-graph-parameter-header > .unity-base-field__input {
+    min-width: 0;
+    flex-shrink: 1;
+}
+.whimshader-shader-graph-parameter-header > .whimshader-shader-graph-parameter-port {
+    height: auto;
+    padding: 0;
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-parameter-port #type { display: none; }
+.whimshader-shader-graph-parameter-port #connector {
+    /* Same connector metrics as the parameter node below (native ShaderPort.uss). */
+    width: 8px;
+    height: 8px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+.whimshader-shader-graph-parameter-insertion {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--unity-colors-highlight-background);
+}
+.whimshader-shader-graph-status {
+    flex-grow: 0;
+    -unity-text-align: middle-right;
+    margin-left: 4px;
+    margin-right: 0;
+}
+.whimshader-shader-graph-color-mode {
+    /* Matches the 100-point toolbar selector in the reference package 17.7.0. */
+    min-width: 100px;
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-toolbar > * {
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-color-mode-field {
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+}
+.whimshader-shader-graph-canvas {
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+    background-color: rgb(32, 32, 32);
+}
+.whimshader-shader-graph--light .whimshader-shader-graph-canvas {
+    background-color: rgb(170, 170, 170);
+}
+.whimshader-shader-graph-node {
+    min-width: 0;
+    overflow: visible;
+}
+.whimshader-shader-graph-node.whimshader-shader-graph-node--preview {
+    min-width: 174px;
+}
+.whimshader-shader-graph-node #extension {
+    /* Native GraphView Node.uss: #contents > #top > #output (Unity 6000.7). */
+    background-color: rgba(46, 46, 46, 0.8);
+}
+.whimshader-shader-graph-function-actions { flex-direction: row; flex-wrap: wrap; }
+/* Default code editor width; content scrolls instead of sizing the node. */
+.whimshader-shader-graph-function { width: 200px; }
+.whimshader-shader-graph-function-port { flex-direction: column; }
+.whimshader-shader-graph-function-port > .unity-base-field { min-width: 0; }
+.whimshader-shader-graph-function-port > .unity-button { flex-shrink: 0; }
+.whimshader-shader-graph-function-signature { white-space: normal; opacity: 0.65; }
+.whimshader-shader-graph-function-code-foldout > .unity-foldout__content { margin-left: 0; }
+.whimshader-shader-graph-function-code { min-width: 0; flex-shrink: 1; min-height: 80px; height: 160px; margin: 0; }
+.whimshader-shader-graph-function-code > .unity-text-field__input { min-width: 0; }
+.whimshader-shader-graph-function-resize { position: absolute; right: 1px; bottom: 1px; margin: 0; opacity: 0.6; cursor: resize-up-left; }
+.whimshader-shader-graph-node--error #node-border {
+    border-color: rgb(225, 90, 80);
+    border-width: 2px;
+}
+.whimshader-shader-graph-node-field {
+    min-width: 0;
+}
+.whimshader-shader-graph-node-field > .unity-base-field__label {
+    min-width: 0;
+    flex-shrink: 1;
+}
+.whimshader-shader-graph-node .whimshader-shader-graph-value {
+    --whimshader-value-label-width: 44px;
+}
+.whimshader-shader-graph-value--scalar { min-width: 144px; }
+.whimshader-shader-graph-value--swatch { min-width: 164px; }
+.whimshader-shader-graph-value--options { min-width: 184px; }
+.whimshader-shader-graph-node .whimshader-shader-graph-value--texture {
+    --whimshader-value-label-width: 82px;
+    min-width: 220px;
+}
+.whimshader-shader-graph-node .whimshader-shader-graph-value--transform {
+    --whimshader-value-label-width: 52px;
+    min-width: 204px;
+}
+/* Unity 6000.7 Vector4Field at 364 px has 17 px component labels,
+   up to 4 px spacing and at least 34 px of editable text per component.
+   Budget 64 px per component including the native input borders and padding. */
+.whimshader-shader-graph-value--vector2 { min-width: 134px; }
+.whimshader-shader-graph-value--vector3 { min-width: 198px; }
+.whimshader-shader-graph-value--vector4 { min-width: 262px; }
+.whimshader-shader-graph-value > .unity-composite-field > .unity-composite-field__label,
+.whimshader-shader-graph-value-editor > .unity-composite-field > .unity-composite-field__label {
+    display: none;
+}
+.whimshader-shader-graph-node .whimshader-shader-graph-value > .unity-base-field > .unity-base-field__label,
+.whimshader-shader-graph-value .whimshader-shader-graph-value-editor > .unity-base-field > .unity-base-field__label,
+.whimshader-shader-graph-value .whimshader-shader-graph-value-texture > .unity-base-field > .unity-base-field__label,
+.whimshader-shader-graph-value .whimshader-fx-seed-row > .unity-base-field > .unity-base-field__label,
+.whimshader-shader-graph-value--transform .unity-vector2-field__label,
+.whimshader-shader-graph-value--transform .unity-double-field__label {
+    width: var(--whimshader-value-label-width);
+    min-width: var(--whimshader-value-label-width);
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-properties .unity-base-field__label {
+    min-width: 0;
+    flex-shrink: 1;
+}
+#graph-inspector-parameters {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+#graph-inspector-parameters .unity-base-field > .unity-base-field__label {
+    min-width: 88px;
+    width: 88px;
+}
+#graph-inspector-parameters .unity-composite-field__field > .unity-base-field__label {
+    /* Keep the native component-label width measured in Editor 6000.7. */
+    min-width: 17px;
+    width: 17px;
+}
+.whimshader-shader-graph-source {
+    height: auto;
+    min-height: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+.whimshader-shader-graph-output #title {
+    background-color: rgba(88, 147, 157, 0.22);
+}
+.whimshader-shader-graph-output #title-label {
+    -unity-font-style: bold;
+}
+.whimshader-shader-graph-output--terminal #node-border {
+    flex-direction: row;
+    align-items: stretch;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 28px;
+    border-bottom-right-radius: 28px;
+    border-right-width: 3px;
+}
+.whimshader-shader-graph-output--terminal #selection-border {
+    border-top-left-radius: 9px;
+    border-bottom-left-radius: 9px;
+    border-top-right-radius: 31px;
+    border-bottom-right-radius: 31px;
+}
+.whimshader-shader-graph-output--terminal #contents {
+    justify-content: center;
+    background-color: transparent;
+}
+.whimshader-shader-graph-output--terminal #top {
+    background-color: transparent;
+}
+.whimshader-shader-graph-output--terminal #input {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.whimshader-shader-graph-output--terminal #divider,
+.whimshader-shader-graph-output--terminal #title-button-container {
+    display: none;
+}
+.whimshader-shader-graph-output--terminal #title {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 56px;
+    padding: 8px 22px 8px 14px;
+    border-width: 0;
+    border-left-width: 1px;
+    border-left-color: rgba(128, 128, 128, 0.3);
+    border-radius: 0;
+    border-top-right-radius: 26px;
+    border-bottom-right-radius: 26px;
+}
+.whimshader-shader-graph-output--terminal #title-label {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+.whimshader-shader-graph-output-destination {
+    margin: 2px 0 0 0;
+    padding: 0;
+    font-size: 10px;
+    opacity: 0.65;
+    -unity-font-style: normal;
+}
+.whimshader-shader-graph-preview-backend {
+    width: 12px;
+    height: 16px;
+    flex-shrink: 0;
+    align-self: center;
+    margin: 0 6px 0 4px;
+}
+.whimshader-shader-graph-output--terminal .whimshader-shader-graph-preview-backend {
+    align-self: flex-start;
+    margin: 2px 0 0 0;
+}
+.whimshader-shader-graph #node-border .whimshader-shader-graph-port--resource #connector,
+.whimshader-shader-graph #node-border .whimshader-shader-graph-port--resource #connector #cap,
+.whimshader-shader-graph #node-border .whimshader-shader-graph-port--boolean #connector,
+.whimshader-shader-graph #node-border .whimshader-shader-graph-port--boolean #connector #cap,
+.whimshader-shader-graph-parameter-header .whimshader-shader-graph-port--resource #connector,
+.whimshader-shader-graph-parameter-header .whimshader-shader-graph-port--resource #cap,
+.whimshader-shader-graph-parameter-header .whimshader-shader-graph-port--boolean #connector,
+.whimshader-shader-graph-parameter-header .whimshader-shader-graph-port--boolean #cap {
+    border-radius: 0;
+}
+.whimshader-shader-graph-port--boolean #connector {
+    rotate: 45deg;
+    scale: 0.8 0.8;
+}
+.whimshader-shader-graph-port > #connector {
+    overflow: visible;
+}
+.whimshader-shader-graph-node-preview {
+    width: 128px;
+    height: 128px;
+    align-self: center;
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-node-preview-image {
+    flex-grow: 1;
+}
+.whimshader-node-preview-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: row;
+    align-items: center;
+    visibility: hidden;
+    background-color: rgba(46, 46, 46, 0.75);
+}
+.whimshader-shader-graph-node:hover .whimshader-node-preview-controls,
+.whimshader-node-preview-controls--focused,
+.whimshader-node-preview-controls--open {
+    visibility: visible;
+}
+.whimshader-node-preview-controls > .unity-toolbar-toggle,
+.whimshader-node-preview-controls > .unity-toolbar-button {
+    flex-shrink: 0;
+}
+.whimshader-node-preview-controls > .whimshader-shader-graph-preview-output {
+    position: relative;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+.whimshader-node-preview-height-badge {
+    display: none;
+    position: absolute;
+    left: 2px;
+    bottom: 2px;
+    opacity: 0.5;
+}
+.whimshader-node-preview--height > .whimshader-node-preview-height-badge { display: flex; }
+.whimshader-shader-graph-node:hover .whimshader-node-preview-height-badge { display: none; }
+.whimshader-shader-graph-preview-output {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+}
+.whimshader-shader-graph-node:hover .whimshader-shader-graph-preview-output,
+.whimshader-node-preview-controls--open > .whimshader-shader-graph-preview-output,
+.whimshader-node-preview-controls--focused > .whimshader-shader-graph-preview-output,
+.whimshader-shader-graph-preview-output--open {
+    visibility: visible;
+}
+.whimshader-shader-graph-preview-output > .unity-base-field__input {
+    min-width: 0;
+    margin: 0;
+    border-width: 1px;
+    border-radius: 0;
+    border-color: rgb(25, 25, 25);
+    background-color: rgba(46, 46, 46, 0.75);
+}
+.whimshader-shader-graph-preview-output .unity-base-popup-field__text {
+    min-width: 0;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.whimshader-shader-graph-preview-output .unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: white;
+}
+.whimshader-shader-graph-preview {
+    margin-bottom: 4px;
+}
+.whimshader-shader-graph-panel--collapsed {
+    margin-bottom: 0;
+}
+/* Native preview sizes: 20x20 collapse, 56x16 expand and 16x16 icon. */
+.whimshader-shader-graph-node #collapse-preview,
+.whimshader-shader-graph-node #expand-preview {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+.whimshader-shader-graph-node #collapse-preview {
+    position: absolute;
+    top: 4px;
+    align-self: center;
+    width: 20px;
+    height: 20px;
+    border-width: 1px;
+    border-radius: 1px;
+    border-color: rgb(240, 240, 240);
+    background-color: black;
+    color: rgb(240, 240, 240);
+    opacity: 0;
+}
+.whimshader-shader-graph-node:hover #collapse-preview,
+.whimshader-shader-graph-node #collapse-preview:focus {
+    opacity: 0.6;
+}
+.whimshader-shader-graph-node #collapse-preview:hover {
+    opacity: 1;
+}
+.whimshader-shader-graph-node #expand-preview {
+    align-self: center;
+    width: 56px;
+    height: 16px;
+    border-width: 0;
+    border-radius: 0;
+    background-color: transparent;
+}
+.whimshader-shader-graph-node #expand-preview:hover {
+    background-color: rgba(128, 128, 128, 0.14);
+}
+.whimshader-shader-graph-preview-chevron {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-parameter-node {
+    min-width: 0;
+}
+.whimshader-shader-graph-parameter-node #output {
+    flex-grow: 1;
+}
+.whimshader-shader-graph-parameter-node #pill #node-border {
+    padding-right: 0;
+}
+/* Match native ShaderPort.uss inside TokenNode; override Pill's compact Port rules. */
+.whimshader-shader-graph-parameter-node #node-border .whimshader-shader-graph-port {
+    height: 24px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.whimshader-shader-graph-parameter-node #node-border #type {
+    font-size: 11px;
+    height: 16px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+.whimshader-shader-graph-parameter-node #node-border #connector {
+    width: 8px;
+    height: 8px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+.whimshader-shader-graph-port {
+    /* Native ShaderPort.uss row metrics in Unity 6000.7. */
+    height: 24px;
+    align-items: center;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.whimshader-shader-graph-port-label {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-port-label > #type {
+    margin-right: 0;
+}
+.whimshader-shader-graph-parameter-node #node-border .whimshader-shader-graph-port-label > #type {
+    height: auto;
+    margin-top: 0;
+}
+.whimshader-shader-graph-parameter-node .whimshader-shader-graph-port-metadata {
+    font-size: 11px;
+}
+.whimshader-shader-graph-port-metadata {
+    flex-shrink: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-radius: 3px;
+    background-color: rgba(128, 128, 128, 0.16);
+    color: var(--unity-colors-label-text);
+    opacity: 0.82;
+    -unity-text-align: middle-center;
+}
+.whimshader-shader-graph-port-metadata--following {
+    margin-left: 2px;
+}
+.whimshader-shader-graph-branch-highlight #node-border {
+    border-color: rgba(128, 180, 205, 0.7);
+}
+.edge.whimshader-shader-graph-branch-highlight { --edge-width: 3; }
+.whimshader-shader-graph-buffer-label {
+    flex-direction: row;
+    align-items: center;
+}
+.whimshader-shader-graph-buffer-icon {
+    flex-shrink: 0;
+}
+.whimshader-shader-graph-buffer-boundary {
+    position: absolute;
+    right: -8px;
+    top: -3px;
+    width: 2px;
+    height: 12px;
+    background-color: rgba(128, 180, 205, 0.85);
+}
+.whimshader-shader-graph-node #node-border .port.input {
+    padding-left: 0;
+}
+.whimshader-shader-graph-node #node-border .port.output {
+    padding-right: 0;
+}
+/* Center the native 8px connector on the inner edge of the node border. */
+.whimshader-shader-graph-node #node-border .port.input > #connector {
+    margin-left: -4px;
+}
+.whimshader-shader-graph-node #node-border .port.output > #connector {
+    margin-right: -4px;
+}
+.whimshader-shader-graph-port-row {
+    flex-direction: row;
+    overflow: visible;
+}
+.whimshader-shader-graph-node #input,
+.whimshader-shader-graph-node #output,
+.whimshader-shader-graph-node #contents,
+.whimshader-shader-graph-node #top,
+.whimshader-shader-graph-node #node-border,
+.whimshader-shader-graph-node #collapsible-area {
+    overflow: visible;
+}
+.whimshader-shader-graph-port-value {
+    /* Native PortInputView.uss layout in Unity 6000.7. */
+    position: absolute;
+    left: -236px;
+    width: 232px;
+    height: 24px;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.whimshader-shader-graph-value-fields {
+    /* Unity 6000.7 Vector field: 17px input + 1px top/bottom spacing + 1px plaque borders. */
+    height: 21px;
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: center;
+    background-color: rgba(63, 63, 63, 0.8);
+    border-color: rgba(25, 25, 25, 0.8);
+    border-width: 1px;
+    border-radius: 2px;
+    padding: 0 4px;
+    margin-right: 16px;
+}
+.whimshader-shader-graph-value-fields > .unity-base-field,
+.whimshader-shader-graph-value-fields > .unity-button {
+    margin: 0;
+}
+.whimshader-shader-graph--light .whimshader-shader-graph-value-fields {
+    background-color: rgba(194, 194, 194, 0.95);
+}
+.whimshader-shader-graph-value-fields > .unity-float-field {
+    /* Measured Vector2Field X component in Unity 6000.7: label 17 + input 28. */
+    width: 45px;
+}
+.whimshader-shader-graph-value-fields > .unity-color-field {
+    /* Native ColorRGBASlotControlView.uss width in Unity 6000.7. */
+    width: 41px;
+}
+.whimshader-shader-graph-value-fields > .whimshader-shader-graph-resource-value {
+    /* Compact resource swatches; height and contents use native field styles. */
+    width: 108px;
+    min-width: 0;
+}
+/* Match the scalar's native X component: label 17 + input 28, inter-component spacing 4. */
+.whimshader-shader-graph-value-fields > .unity-vector2-field {
+    width: 94px;
+}
+.whimshader-shader-graph-value-fields > .unity-vector3-field {
+    width: 143px;
+}
+.whimshader-shader-graph-value-fields > .unity-vector4-field {
+    width: 192px;
+}
+.whimshader-shader-graph-value-fields .unity-composite-field__field {
+    margin-left: 4px;
+    margin-right: 0;
+}
+.whimshader-shader-graph-value-fields .unity-composite-field__field--first {
+    margin-left: 0;
+}
+.whimshader-shader-graph-value-fields .unity-composite-field__field-spacer {
+    display: none;
+}
+.whimshader-shader-graph-value-fields .unity-base-field__input {
+    margin-left: 0;
+    margin-right: 0;
+}
+.whimshader-shader-graph-uv-mode {
+    width: 74px;
+}
+.whimshader-shader-graph-uv-vector3 .whimshader-shader-graph-uv-mode {
+    /* Native Vector3Field in Unity 6000.7: two flex shares and the 4px X/Y gap. */
+    width: auto;
+    min-width: 0;
+    flex-basis: 4px;
+    flex-grow: 2;
+}
+.whimshader-shader-graph-value-stub {
+    position: absolute;
+    right: 0;
+    width: 16px;
+    height: 1px;
+    top: 11px;
+}
+/* Native RedirectNode.uss spacing, with a narrower body and a 24px port row. */
+.node.whimshader-shader-graph-reroute {
+    width: 48px;
+    height: 24px;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 8px;
+}
+.whimshader-shader-graph-reroute #node-border {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 8px;
+}
+.whimshader-shader-graph-reroute #selection-border {
+    margin: 0;
+    border-radius: 8px;
+}
+.whimshader-shader-graph-reroute #node-border #contents #top #input,
+.whimshader-shader-graph-reroute #node-border #contents #top #output {
+    width: 50%;
+    padding: 0;
+    justify-content: center;
+}
+.whimshader-shader-graph-reroute #top {
+    height: 24px;
+    align-items: center;
+}
+.whimshader-shader-graph-reroute .port {
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+.whimshader-shader-graph-reroute #connector {
+    margin-top: 0;
+    margin-bottom: 0;
+    align-self: center;
+}
+.whimshader-shader-graph-reroute .input > #connector {
+    margin-left: 6px;
+    margin-right: 0;
+}
+.whimshader-shader-graph-reroute .output > #connector {
+    margin-left: 0;
+    margin-right: 6px;
+}
+.whimshader-shader-graph-message {
+    position: absolute;
+    left: 100%;
+    top: 4px;
+    margin-left: 4px;
+    width: 16px;
+    height: 16px;
+    overflow: visible;
+}
+.whimshader-shader-graph-message > #message-icon { width: 16px; height: 16px; }
+.whimshader-shader-graph-message-popup {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin-left: 4px;
+    min-width: 180px;
+    width: 320px;
+    white-space: normal;
+}
+.whimshader-shader-graph-note { overflow: visible; }
+/* Native GraphView Node, Unity 6000.7: body inset 3px, selection inset 1px,
+   giving a 2px outward offset; selection radius 8px. Keep native state colors/width. */
+.whimshader-shader-graph-canvas .sticky-note.whimshader-shader-graph-note > #selection-border {
+    left: -2px;
+    right: -2px;
+    top: -2px;
+    bottom: -2px;
+    margin: 0;
+    border-radius: 8px;
+}
+
+.whimshader-shader-graph-panel-content {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    min-height: 0;
+}
+.whimshader-shader-graph-tool-panel {
+    --whimshader-panel-tab-background: var(--unity-colors-default-background);
+    --whimshader-panel-tab-hover: var(--unity-colors-tab-background);
+    --whimshader-panel-tab-active: var(--unity-colors-window-background);
+    --whimshader-panel-tab-border: var(--unity-colors-default-border);
+    --whimshader-panel-tab-text: rgb(160, 160, 160);
+    --whimshader-panel-tab-active-text: rgb(240, 240, 240);
+}
+.whimshader-shader-graph--light .whimshader-shader-graph-tool-panel {
+    --whimshader-panel-tab-background: var(--unity-colors-tab-background);
+    --whimshader-panel-tab-hover: var(--unity-colors-button-background-hover);
+    --whimshader-panel-tab-active: var(--unity-colors-window-background);
+    --whimshader-panel-tab-border: var(--unity-colors-default-border);
+    --whimshader-panel-tab-text: var(--unity-colors-label-text);
+    --whimshader-panel-tab-active-text: var(--unity-colors-label-text);
+}
+.whimshader-shader-graph-panel-header {
+    flex-direction: row;
+    flex-shrink: 0;
+    background-color: var(--whimshader-panel-tab-background);
+}
+.whimshader-shader-graph-panel-header > .unity-tab-view__content-viewport {
+    flex-grow: 0;
+    flex-shrink: 1;
+    min-width: 0;
+}
+.whimshader-shader-graph-panel-header-grip {
+    flex-grow: 1;
+    min-width: 0;
+    cursor: move-arrow;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--whimshader-panel-tab-border);
+}
+.whimshader-shader-graph-panel-title {
+    cursor: move-arrow;
+    /* Two native ToolbarButton insets (4px each in Unity 6000.7). */
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 0;
+    border-right-width: 1px;
+    border-right-color: var(--whimshader-panel-tab-border);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--whimshader-panel-tab-border);
+    background-color: var(--whimshader-panel-tab-background);
+}
+.whimshader-shader-graph-panel-title:hover {
+    background-color: var(--whimshader-panel-tab-hover);
+}
+.whimshader-shader-graph-panel-title:checked {
+    background-color: var(--whimshader-panel-tab-active);
+    border-bottom-width: 0;
+    padding-bottom: 1px;
+}
+.whimshader-shader-graph-panel-title > .unity-tab__header-label {
+    -unity-font-style: bold;
+    color: var(--whimshader-panel-tab-text);
+}
+.whimshader-shader-graph-panel-title:checked > .unity-tab__header-label {
+    color: var(--whimshader-panel-tab-active-text);
+}
+.whimshader-shader-graph-panel-title > .unity-tab__header-underline { display: none; }
+.whimshader-shader-graph-panel-header > .whimshader-shader-graph-panel-menu {
+    flex-shrink: 0;
+    height: auto;
+    align-self: stretch;
+    margin: 0;
+    border-radius: 0;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--whimshader-panel-tab-border);
+}
+.whimshader-shader-graph-panel-menu > .unity-toolbar-menu__arrow,
+.whimshader-shader-graph-panel-menu > .unity-toolbar-menu__text { display: none; }
+.whimshader-shader-graph-tool-panel { overflow: hidden; }
+.whimshader-shader-graph-panel-drop-hint {
+    position: absolute;
+    background-color: rgba(80, 150, 220, 0.25);
+    border-width: 1px;
+    border-color: var(--unity-colors-highlight-background);
+    -unity-text-align: middle-center;
+    color: var(--unity-colors-label-text);
+}
+.whimshader-shader-graph-tab-preview {
+    position: absolute;
+    background-color: rgba(80, 150, 220, 0.07);
+    padding: 0;
+    margin: 0;
+}
+.whimshader-shader-graph-tab-ghost {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    flex-direction: row;
+    opacity: 0.85;
+}
+.whimshader-shader-graph-tab-ghost-title {
+    flex-shrink: 0;
+    justify-content: center;
+    background-color: var(--whimshader-panel-tab-active);
+    border-bottom-width: 0;
+}
+.whimshader-shader-graph-tab-ghost-title > .unity-tab__header-label {
+    color: var(--whimshader-panel-tab-active-text);
+}
+.whimshader-shader-switch-case {
+    flex-direction: row;
+}
+.whimshader-shader-switch-case > .unity-base-field {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    min-width: 0;
+}
+.whimshader-shader-switch-case .unity-base-field__label {
+    min-width: 0;
+    width: auto;
+    flex-shrink: 0;
+}
+.whimshader-shader-switch-case > .whimshader-shader-switch-comparison {
+    flex-grow: 2;
+}
+
+.whimshader-shader-graph-drag-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+    overflow: visible;
+    opacity: 0.85;
+}

@@ -1,0 +1,77 @@
+/* Native-container bridge for the unchanged WhimTex visual stylesheet in ../WhimShaderWindow.uss.
+   Copyright (c) 2026 Mikhail. MIT; see ../Workspace/LICENSE.WhimTex.md.
+   Dimensions below come from WhimTex ShaderGraphWindow.uss, not new node metrics. */
+
+.whimshader-node-presentation .whimshader-presentation-hidden { display: none; }
+.whimshader-node-presentation .whimshader-node-options {
+    background-color: transparent;
+}
+.whimshader-node-presentation .whimshader-node-options > #items {
+    padding: 0;
+    min-width: 0;
+}
+.whimshader-node-presentation .whimshader-node-options .unity-base-field {
+    min-width: 0;
+}
+.whimshader-node-presentation .whimshader-node-options .unity-base-field__label {
+    min-width: 0;
+    flex-shrink: 1;
+}
+/* Preserve native disabled indication after removing only MaterialNodeView's visual skin. */
+.whimshader-node-presentation MaterialNodeView > #disabledOverlay {
+    position: absolute;
+    left: 4px; right: 4px; top: 4px; bottom: 4px;
+    border-radius: 4px;
+}
+.whimshader-node-presentation MaterialNodeView.disabled > #disabledOverlay {
+    background-color: rgba(32, 32, 32, 0.5);
+}
+.whimshader-node-presentation MaterialNodeView.disabled:hover > #disabledOverlay {
+    background-color: rgba(32, 32, 32, 0.25);
+}
+
+/* Native ShaderPort's label moves into WhimTex's label+type-badge row.
+   Retain ShaderPort.uss label metrics now that #type is no longer its direct child. */
+.whimshader-node-presentation ShaderPort > #port-label > #type {
+    font-size: 11px;
+    height: 16px;
+    padding-left: 0; padding-right: 0;
+    margin-left: 4px; margin-right: 0;
+    margin-top: 4px; margin-bottom: 0;
+}
+.whimshader-node-presentation PropertyNodeView #node-border ShaderPort > #port-label > #type {
+    height: auto;
+    margin-top: 0;
+}
+.whimshader-node-presentation PortInputView.whimshader-shader-graph-port-value {
+    left: -236px;
+    width: 232px;
+    height: 24px;
+    padding: 0;
+}
+.whimshader-node-presentation PortInputView > #container.whimshader-shader-graph-value-fields {
+    height: 21px;
+    padding: 0 4px;
+    margin-right: 16px;
+}
+/* WhimTex's native-vector budget: 17px label + 28px text, with 4px component gap.
+   Retain the native controls and their draggers/callbacks; adjust only their existing wrappers. */
+.whimshader-node-presentation .whimshader-shader-graph-value-fields MultiFloatSlotControlView > #dummy,
+.whimshader-node-presentation .whimshader-shader-graph-value-fields MultiIntegerSlotControlView > #dummy {
+    width: 17px;
+    flex-shrink: 0;
+}
+.whimshader-node-presentation .whimshader-shader-graph-value-fields MultiFloatSlotControlView > .unity-base-field,
+.whimshader-node-presentation .whimshader-shader-graph-value-fields MultiIntegerSlotControlView > .unity-base-field {
+    width: 28px;
+    margin: 0;
+    flex-shrink: 0;
+}
+.whimshader-node-presentation .whimshader-shader-graph-value-fields #dummy.whimshader-value-component-following {
+    margin-left: 4px;
+}
+
+.whimshader-preview-controls--always-visible,
+.whimshader-preview-controls--always-visible > .whimshader-shader-graph-preview-output {
+    visibility: visible;
+}

@@ -1,0 +1,75 @@
+/* WhimTex appearance adapters for the native Shader Graph views.
+   Copyright (c) 2026 Mikhail; see Workspace/LICENSE.WhimTex.md.
+   Load after WhimShaderWindow.uss and add whimshader-native to the window root.
+   Selectors verified against com.unity.shadergraph@022ab9380640 source.
+   Native previews, type colors, selection, validation and controls retain their behavior. */
+
+.whimshader-native GraphEditorView,
+.whimshader-native GraphEditorView > #content,
+.whimshader-native MaterialGraphView {
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Match WhimTex's canvas colors in both Editor themes. */
+.whimshader-native MaterialGraphView {
+    background-color: rgb(32, 32, 32);
+}
+.whimshader-native.whimshader-shader-graph--light MaterialGraphView {
+    background-color: rgb(170, 170, 170);
+}
+
+.whimshader-native MaterialNodeView,
+.whimshader-native PropertyNodeView {
+    min-width: 0;
+    overflow: visible;
+}
+
+/* WhimTex's node extension background; retain native preview sizing and geometry. */
+.whimshader-native MaterialNodeView #controls,
+.whimshader-native MaterialNodeView #dropdowns,
+.whimshader-native MaterialNodeView #previewFiller {
+    background-color: rgba(46, 46, 46, 0.8);
+}
+
+.whimshader-native PropertyNodeView #output {
+    flex-grow: 1;
+}
+.whimshader-native PropertyNodeView #pill #node-border {
+    padding-right: 0;
+}
+
+/* Same ShaderPort metrics used by WhimTex's parameter nodes, sourced from
+   native ShaderPort.uss: 24 px row, 8 px connector, 4 px horizontal spacing. */
+.whimshader-native PropertyNodeView #node-border ShaderPort {
+    height: 24px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.whimshader-native PropertyNodeView #node-border ShaderPort > #connector {
+    width: 8px;
+    height: 8px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+.whimshader-native PropertyNodeView #node-border ShaderPort > #type {
+    font-size: 11px;
+    height: 16px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+/* The workspace supplies outer panel borders. Apply only to native panels
+   embedded beneath workspace content, leaving native floating panels alone. */
+.whimshader-native .whimshader-shader-graph-panel-content #SGBlackboard > .mainContainer,
+.whimshader-native .whimshader-shader-graph-panel-content .InspectorView > .mainContainer {
+    margin: 0;
+    border-width: 0;
+    border-radius: 0;
+    background-color: var(--unity-colors-window-background);
+}
