@@ -26,7 +26,8 @@ namespace DCFApixels.WhimShader
             new ColorControl(UnityEngine.Color.black, true), ShaderStage.Fragment);
     }
 
-    internal sealed class WhimSurfaceSubTarget : UniversalSubTarget
+    // Allow projects to customize pass setup while retaining the Whim Surface settings UI.
+    internal class WhimSurfaceSubTarget : UniversalSubTarget
     {
         internal const string PackageRoot = "Packages/com.dcfapixels.whimshader/";
         internal const string ShaderRoot = PackageRoot + "Shaders/";

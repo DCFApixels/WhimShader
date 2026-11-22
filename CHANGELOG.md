@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Allowed project-specific Whim Surface subtargets to customize pass setup while retaining the standard Shader Settings panel.
+- Terminated Unity metadata files with newlines so their final YAML keys import correctly.
+
 - Added compact agent authoring and optional Pipeline commands for node discovery, topology inspection, detailed queries and revision-checked batches, with persistent aliases, parameter defaults, native validation and live Undo/Redo.
 - Adapted WhimTex's automatic arrangement to native graphs. Agent-created nodes no longer require coordinates; existing and explicit positions are preserved. Added Arrange All / Selected in the editor.
 - Added on-demand node preview PNGs for agents, with output/channel selection, Image/Height/3D modes and explicit animation time. Requests use unsaved graph state and the existing preview renderer without altering graph data or presentation settings.
