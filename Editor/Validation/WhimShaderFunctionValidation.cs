@@ -17,6 +17,52 @@ namespace DCFApixels.WhimShader
     public static class WhimShaderFunctionValidation
     {
         static void Require(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
+
+        public static object CheckInspectorIsolation()
+        {
+            var graph = WhimShaderURP.CreateGraph();
+            var owner = graph.owner;
+            var window = ScriptableObject.CreateInstance<MaterialGraphEditWindow>();
+            try
+            {
+                using var searcher = new SearcherProvider();
+                searcher.Initialize(null, graph, null);
+                var nativeEntry = searcher.currentNodeEntries.Single(entry => entry.node is CustomFunctionNode);
+                Require(nativeEntry.node.GetType() == typeof(CustomFunctionNode) && nativeEntry.title.SequenceEqual(new[] { "Utility", "Custom Function" }),
+                    "The built-in searcher must list only the native Custom Function.");
+                var whimEntry = WhimShaderWindow.CatalogEntries(searcher, graph).Single(entry => entry.node is CustomFunctionNode);
+                Require(whimEntry.node is WhimShaderCustomFunctionNode && whimEntry.title.SequenceEqual(new[] { "HLSL", "Custom Function" }),
+                    "The Whim catalog must list its own Custom Function.");
+
+                graph.AddNode(nativeEntry.node);
+                graph.AddNode(whimEntry.node);
+                using var editor = new GraphEditorView(window, graph, graph.messageManager, "Custom Function isolation", disablePreviewsForTesting: true);
+                var views = editor.graphView.nodes.OfType<MaterialNodeView>().Where(view => view.node is CustomFunctionNode);
+                foreach (var view in views.OrderBy(view => view.node is WhimShaderCustomFunctionNode))
+                    editor.graphView.AddToSelection(view);
+                var inspector = editor.inspectorView;
+                inspector.RefreshInspectables();
+                var fields = inspector.Q("NodeSettingsContainer").Query<HlslFunctionView>().ToList();
+                Require(fields.Count == 2 && fields[0].parent.Children().OfType<ReorderableSlotListView>().Count() == 2,
+                    "The native inspector did not create its HLSL fields and port lists.");
+
+                WhimShaderParametersPanel.ProtectGeneratedFunctionSettings(inspector);
+                Require(fields[0].enabledSelf && fields[0].style.display != DisplayStyle.None &&
+                    fields[0].parent.Children().OfType<ReorderableSlotListView>().All(ports => ports.enabledSelf),
+                    "The native Custom Function fields and ports must stay editable.");
+                Require(!fields[1].enabledSelf && fields[1].style.display == DisplayStyle.None &&
+                    fields[1].parent.Children().OfType<ReorderableSlotListView>().All(ports => !ports.enabledSelf),
+                    "The native inspector exposes the Whim-generated wrapper for editing.");
+                return new { nativeCatalog = "Utility/Custom Function", whimCatalog = "HLSL/Custom Function", nativeInspectorEditable = true, whimWrapperProtected = true };
+            }
+            finally
+            {
+                graph.OnDisable();
+                UnityEngine.Object.DestroyImmediate(owner);
+                UnityEngine.Object.DestroyImmediate(window);
+            }
+        }
+
         public static object Run()
         {
             var checks = new List<string>();
@@ -167,8 +213,11 @@ namespace DCFApixels.WhimShader
             editor.Compile(); Require(node.functionBody.Contains("In * 0.5"), "Compile button did not apply CodeArea text.");
             var view = window.PreviewService.Editor.graphView.nodes.OfType<MaterialNodeView>().Single(v => v.node == node);
             window.PreviewService.Editor.graphView.ClearSelection(); window.PreviewService.Editor.graphView.AddToSelection(view);
-            window.PreviewService.Editor.inspectorView.RefreshInspectables();
-            Require(window.rootVisualElement.Query<VisualElement>().ToList().All(e => e.GetType().Name != "HlslFunctionView"), "Native inspector exposes the generated wrapper for editing.");
+            var inspector = window.PreviewService.Editor.inspectorView;
+            inspector.RefreshInspectables();
+            WhimShaderParametersPanel.ProtectGeneratedFunctionSettings(inspector);
+            var wrapper = inspector.Q<HlslFunctionView>();
+            Require(wrapper is { enabledSelf: false } && wrapper.style.display == DisplayStyle.None, "Native inspector exposes the generated wrapper for editing.");
             window.SaveChanges();
             string path = "Assets/WhimShaderValidation/Custom Function.whimshader";
             var restored = new GraphData { messageManager = new MessageManager() };

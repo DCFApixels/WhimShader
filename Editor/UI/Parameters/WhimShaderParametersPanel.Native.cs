@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.ShaderGraph;
 using UnityEditor.ShaderGraph.Drawing;
+using UnityEditor.ShaderGraph.Drawing.Inspector;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine.UIElements;
 
@@ -27,6 +28,31 @@ namespace DCFApixels.WhimShader
             selectedNodeInspector.Add(nativeInspector);
             selectedNodeInspector.AddToClassList("whimshader-selected-node-inspector");
             if (selectedNodeInspector.parent != inspectorRoot) inspectorRoot.Add(selectedNodeInspector);
+        }
+
+        internal static void ProtectGeneratedFunctionSettings(InspectorView inspector)
+        {
+            var selection = inspector.selection;
+            if (!selection.Any(item => item is MaterialNodeView { node: WhimShaderCustomFunctionNode }))
+                return;
+
+            var fields = inspector.Q("NodeSettingsContainer").Query<HlslFunctionView>().ToList();
+            var functions = selection.OfType<MaterialNodeView>().Select(view => view.node).OfType<CustomFunctionNode>();
+            foreach (var (field, function) in fields.Zip(functions, (field, function) => (field, function)))
+            {
+                if (function is not WhimShaderCustomFunctionNode || field.style.display == DisplayStyle.None)
+                    continue;
+
+                // The inline editor applies HLSL and port changes together, leaving the compiled wrapper intact on failure.
+                field.SetEnabled(false);
+                field.style.display = DisplayStyle.None;
+                foreach (var ports in field.parent.Children().OfType<ReorderableSlotListView>())
+                {
+                    ports.SetEnabled(false);
+                    ports.style.display = DisplayStyle.None;
+                }
+                field.parent.Add(new Label("Edit code and ports on the node.") { style = { whiteSpace = WhiteSpace.Normal } });
+            }
         }
 
         // A standalone MaterialGraphView can be used without a GraphEditorView catalog.

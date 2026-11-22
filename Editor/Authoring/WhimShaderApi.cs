@@ -76,7 +76,7 @@ namespace DCFApixels.WhimShader
             internal CatalogScope(GraphData graph)
             {
                 provider.Initialize(null, graph, null);
-                entries = provider.currentNodeEntries.Where(e => e.node.GetType() != typeof(CustomFunctionNode) &&
+                entries = WhimShaderWindow.CatalogEntries(provider, graph).Where(e =>
                     WhimShaderArrangement.Visible(e.node) && e.node is not BlockNode &&
                     (graph.isSubGraph ? e.node.allowedInSubGraph : graph.activeTargets.Any(t => t.IsNodeAllowedByTarget(e.node.GetType()))))
                     .OrderBy(PathOf, StringComparer.OrdinalIgnoreCase).ToArray();

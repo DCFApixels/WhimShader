@@ -334,6 +334,7 @@ namespace DCFApixels.WhimShader
                 if (status != null) status.text = "Modified";
             }
             editor.HandleGraphChanges(undo);
+            WhimShaderParametersPanel.ProtectGeneratedFunctionSettings(editor.inspectorView);
             nodePalette?.RefreshIfNeeded();
             UpdatePreviews();
             HideMetadataNodes();

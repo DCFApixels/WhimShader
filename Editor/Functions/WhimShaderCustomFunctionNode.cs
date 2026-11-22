@@ -43,6 +43,8 @@ namespace DCFApixels.WhimShader
     [Serializable, Title("HLSL", "Custom Function"), HasDependencies(typeof(WhimShaderCustomFunctionNode.Dependencies))]
     internal sealed class WhimShaderCustomFunctionNode : CustomFunctionNode, IGeneratesFunction
     {
+        internal override bool ExposeToSearcher => false;
+
         [SerializeField] internal WhimFunctionDraft draft = new();
         [SerializeField] internal string appliedSource;
         [SerializeField] internal string appliedInclude;

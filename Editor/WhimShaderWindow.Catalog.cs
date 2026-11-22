@@ -48,13 +48,39 @@ namespace DCFApixels.WhimShader
         {
             catalogProvider.connectedPort = null; catalogProvider.target = null;
             catalogProvider.GenerateNodeEntries();
-            return ToSearchTree(catalogProvider.currentNodeEntries);
+            return ToSearchTree(CatalogEntries(catalogProvider, Graph));
+        }
+
+        internal static IEnumerable<NodeEntry> CatalogEntries(SearcherProvider provider, GraphData graph)
+        {
+            foreach (var entry in provider.currentNodeEntries)
+                if (entry.node.GetType() != typeof(CustomFunctionNode))
+                    yield return entry;
+
+            if (provider.target is ContextView)
+                yield break;
+
+            var function = new WhimShaderCustomFunctionNode();
+            if (graph.isSubGraph ? !function.allowedInSubGraph : !function.allowedInMainGraph)
+                yield break;
+
+            var title = new[] { "HLSL", "Custom Function" };
+            var connectedSlot = provider.connectedPort?.slot;
+            if (connectedSlot == null)
+            {
+                yield return new NodeEntry { node = function, title = title, compatibleSlotId = -1 };
+                yield break;
+            }
+
+            foreach (var slot in function.GetSlots<MaterialSlot>())
+                if (slot.IsCompatibleWith(connectedSlot) && slot.IsCompatibleStageWith(connectedSlot))
+                    yield return new NodeEntry { node = function, title = title, compatibleSlotId = slot.id, slotName = slot.displayName };
         }
 
         List<SearchTreeEntry> ToSearchTree(IEnumerable<NodeEntry> sourceEntries)
         {
-            var leaves = sourceEntries.Where(e => e.node.GetType() != typeof(CustomFunctionNode) && (!Graph.activeTargets.Any() ||
-                Graph.activeTargets.Any(t => t.IsNodeAllowedByTarget(e.node.GetType()))))
+            var leaves = sourceEntries.Where(e => !Graph.activeTargets.Any() ||
+                Graph.activeTargets.Any(t => t.IsNodeAllowedByTarget(e.node.GetType())))
                 .Select(e => (entry: e, path: CatalogPath(e))).OrderBy(e => RootOrder(e.path[0]))
                 .ThenBy(e => string.Join("/", e.path), StringComparer.OrdinalIgnoreCase).ToArray();
             var result = new List<SearchTreeEntry> { new SearchTreeGroupEntry(new GUIContent("Create Node"), 0) };
@@ -77,7 +103,6 @@ namespace DCFApixels.WhimShader
             var path = entry.title.ToArray();
             if (entry.node is PropertyNode property) path = new[] { "Parameters", property.property.displayName };
             else if (entry.node is SubGraphNode && path[0] != "Sub Graphs") path = new[] { "Sub Graphs" }.Concat(path).ToArray();
-            else if (entry.node is CustomFunctionNode) path = new[] { "HLSL", "Custom Function" };
             if (entry.compatibleSlotId >= 0 && entry.node.FindSlot<MaterialSlot>(entry.compatibleSlotId) is { } slot)
                 path[^1] += " : " + slot.displayName;
             return path;
@@ -169,7 +194,7 @@ namespace DCFApixels.WhimShader
             if (!Editable) return;
             catalogProvider.connectedPort = connectedPort; catalogProvider.target = request.target;
             catalogProvider.GenerateNodeEntries();
-            var tree = ToSearchTree(catalogProvider.currentNodeEntries);
+            var tree = ToSearchTree(CatalogEntries(catalogProvider, Graph));
             var root = new WhimShaderSearchDropdown.Item("Create Node", true);
             var parents = new List<WhimShaderSearchDropdown.Item> { root };
             foreach (var entry in tree.Skip(1))
